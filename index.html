@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialVibe</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <a href="index.html" class="sidebar-logo">
+                <i class="fas fa-bolt"></i>
+                <span>SocialVibe</span>
+            </a>
+
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="discover.html" class="nav-item">
+                    <i class="fas fa-compass"></i>
+                    <span>Discover</span>
+                </a>
+                <a href="profile.html" class="nav-item">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info" onclick="window.location.href='profile.html'">
+                    <img id="sidebarAvatar" src="" class="user-avatar" alt="">
+                    <div class="user-details">
+                        <div class="user-name" id="sidebarName">Loading...</div>
+                        <div class="user-handle" id="sidebarHandle">@loading</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-area">
+            <div class="feed-container">
+                <!-- Stories Section -->
+                <div class="stories-section">
+                    <div class="story add-story">
+                        <div class="story-ring">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <span class="story-name">Add</span>
+                    </div>
+                    <div class="story">
+                        <div class="story-ring">
+                            <img src="https://ui-avatars.com/api/?name=Alex&background=000000&color=fff" alt="">
+                        </div>
+                        <span class="story-name">Alex</span>
+                    </div>
+                    <div class="story">
+                        <div class="story-ring">
+                            <img src="https://ui-avatars.com/api/?name=Sarah&background=000000&color=fff" alt="">
+                        </div>
+                        <span class="story-name">Sarah</span>
+                    </div>
+                    <div class="story">
+                        <div class="story-ring">
+                            <img src="https://ui-avatars.com/api/?name=Mike&background=000000&color=fff" alt="">
+                        </div>
+                        <span class="story-name">Mike</span>
+                    </div>
+                    <div class="story">
+                        <div class="story-ring">
+                            <img src="https://ui-avatars.com/api/?name=Emma&background=000000&color=fff" alt="">
+                        </div>
+                        <span class="story-name">Emma</span>
+                    </div>
+                    <div class="story">
+                        <div class="story-ring">
+                            <img src="https://ui-avatars.com/api/?name=John&background=000000&color=fff" alt="">
+                        </div>
+                        <span class="story-name">John</span>
+                    </div>
+                </div>
+
+                <!-- Post Composer -->
+                <div class="post-composer">
+                    <textarea id="postInput" class="composer-input" placeholder="What's happening?"></textarea>
+
+                    <div id="feelingIndicator" class="feeling-indicator hidden">
+                        <span id="feelingEmoji"></span>
+                        <span id="feelingText"></span>
+                        <button class="feeling-remove" onclick="removeFeeling()">×</button>
+                    </div>
+
+                    <div id="imagePreview" class="image-preview">
+                        <img id="previewImg" src="">
+                        <button onclick="removeImage()">×</button>
+                    </div>
+
+                    <div id="feelingPicker" class="feeling-picker hidden">
+                        <div class="feeling-picker-title">How are you feeling?</div>
+                        <div class="feeling-grid">
+                            <button class="feeling-btn" onclick="selectFeeling('😊', 'happy')">😊 Happy</button>
+                            <button class="feeling-btn" onclick="selectFeeling('😍', 'loved')">😍 Loved</button>
+                            <button class="feeling-btn" onclick="selectFeeling('🎉', 'excited')">🎉 Excited</button>
+                            <button class="feeling-btn" onclick="selectFeeling('😎', 'cool')">😎 Cool</button>
+                            <button class="feeling-btn" onclick="selectFeeling('🤔', 'thoughtful')">🤔 Thinking</button>
+                            <button class="feeling-btn" onclick="selectFeeling('😴', 'tired')">😴 Tired</button>
+                            <button class="feeling-btn" onclick="selectFeeling('💪', 'motivated')">💪 Motivated</button>
+                            <button class="feeling-btn" onclick="selectFeeling('☕', 'relaxed')">☕ Relaxed</button>
+                        </div>
+                    </div>
+
+                    <div class="composer-actions">
+                        <div class="composer-tools">
+                            <input type="file" id="imageInput" accept="image/*" hidden
+                                onchange="handleImageUpload(event)">
+                            <button class="tool-btn" onclick="document.getElementById('imageInput').click()">
+                                <i class="fas fa-image"></i>
+                                <span>Image</span>
+                            </button>
+                            <button class="tool-btn" onclick="toggleFeelingPicker()">
+                                <i class="fas fa-smile"></i>
+                                <span>Feeling</span>
+                            </button>
+                        </div>
+                        <button class="btn-primary" onclick="createPost()">Post</button>
+                    </div>
+                </div>
+
+                <!-- Feed -->
+                <div id="feedContainer"></div>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="empty-state hidden">
+                    <i class="fas fa-stream"></i>
+                    <h3>No posts yet</h3>
+                    <p>Create your first post or follow people to see updates</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Panel -->
+        <aside class="right-panel">
+            <div class="widget">
+                <div class="widget-title">
+                    <i class="fas fa-fire"></i>
+                    Trending
+                </div>
+                <div class="trending-item">
+                    <span class="trending-rank">1</span>
+                    <div class="trending-info">
+                        <div class="trending-topic">#TechVibes</div>
+                        <div class="trending-count">2.4k posts</div>
+                    </div>
+                </div>
+                <div class="trending-item">
+                    <span class="trending-rank">2</span>
+                    <div class="trending-info">
+                        <div class="trending-topic">#BuildInPublic</div>
+                        <div class="trending-count">1.8k posts</div>
+                    </div>
+                </div>
+                <div class="trending-item">
+                    <span class="trending-rank">3</span>
+                    <div class="trending-info">
+                        <div class="trending-topic">#Hackathon</div>
+                        <div class="trending-count">1.2k posts</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="widget">
+                <div class="widget-title">
+                    <i class="fas fa-bolt"></i>
+                    Quick Stats
+                </div>
+                <div style="display: flex; gap: 16px;">
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalPosts">0</div>
+                        <div class="stat-label">Posts</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalLikes">0</div>
+                        <div class="stat-label">Likes</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+        <a href="index.html" class="nav-item active"><i class="fas fa-home"></i></a>
+        <a href="discover.html" class="nav-item"><i class="fas fa-compass"></i></a>
+        <a href="profile.html" class="nav-item"><i class="fas fa-user"></i></a>
+        <a href="settings.html" class="nav-item"><i class="fas fa-cog"></i></a>
+    </nav>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="js/app.js"></script>
+    <script>
+        let selectedImage = null;
+        let selectedFeeling = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFeed();
+            loadUserInfo();
+            loadStats();
+        });
+
+        function loadUserInfo() {
+            const user = getUser();
+            const avatar = user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=171717&color=ededed`;
+            document.getElementById('sidebarAvatar').src = avatar;
+            document.getElementById('sidebarName').textContent = user.name;
+            document.getElementById('sidebarHandle').textContent = '@' + user.username;
+        }
+
+        function loadStats() {
+            const posts = getPosts();
+            const user = getUser();
+            const userPosts = posts.filter(p => p.authorId === user.id);
+            document.getElementById('totalPosts').textContent = userPosts.length;
+            document.getElementById('totalLikes').textContent = userPosts.reduce((a, b) => a + (b.likes || 0), 0);
+        }
+
+        function toggleFeelingPicker() {
+            document.getElementById('feelingPicker').classList.toggle('hidden');
+        }
+
+        function selectFeeling(emoji, text) {
+            selectedFeeling = { emoji, text };
+            document.getElementById('feelingEmoji').textContent = emoji;
+            document.getElementById('feelingText').textContent = text;
+            document.getElementById('feelingIndicator').classList.remove('hidden');
+            document.getElementById('feelingPicker').classList.add('hidden');
+        }
+
+        function removeFeeling() {
+            selectedFeeling = null;
+            document.getElementById('feelingIndicator').classList.add('hidden');
+        }
+
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    selectedImage = e.target.result;
+                    document.getElementById('previewImg').src = selectedImage;
+                    document.getElementById('imagePreview').classList.add('active');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeImage() {
+            selectedImage = null;
+            document.getElementById('imagePreview').classList.remove('active');
+            document.getElementById('imageInput').value = '';
+        }
+
+        function createPost() {
+            const text = document.getElementById('postInput').value.trim();
+
+            if (!text && !selectedImage && !selectedFeeling) {
+                showToast('Write something to post', 'error');
+                return;
+            }
+
+            const user = getUser();
+            const newPost = {
+                id: Date.now().toString(),
+                text,
+                image: selectedImage,
+                feeling: selectedFeeling,
+                authorId: user.id,
+                authorName: user.name,
+                authorAvatar: user.avatar,
+                likes: 0,
+                likedBy: [],
+                comments: [],
+                createdAt: new Date().toISOString()
+            };
+
+            const posts = getPosts();
+            posts.unshift(newPost);
+            savePosts(posts);
+
+            // Clear form
+            document.getElementById('postInput').value = '';
+            removeImage();
+            removeFeeling();
+
+            loadFeed();
+            loadStats();
+            showToast('Posted');
+        }
+
+        function loadFeed() {
+            const posts = getPosts();
+            const container = document.getElementById('feedContainer');
+            const empty = document.getElementById('emptyState');
+            const user = getUser();
+
+            if (posts.length === 0) {
+                empty.classList.remove('hidden');
+                container.innerHTML = '';
+                return;
+            }
+
+            empty.classList.add('hidden');
+            container.innerHTML = posts.map(post => {
+                const comments = post.comments || [];
+                const likedByUser = post.likedBy && post.likedBy.includes(user.id);
+                const timeAgo = getTimeAgo(post.createdAt);
+                const feelingBadge = post.feeling ?
+                    `<span class="feeling-badge">· ${post.feeling.emoji} ${post.feeling.text}</span>` : '';
+                const avatar = post.authorAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(post.authorName)}&background=171717&color=ededed`;
+
+                return `
+                    <article class="post-item" data-id="${post.id}">
+                        <div class="post-header">
+                            <img src="${avatar}" class="post-avatar" alt="">
+                            <div class="post-meta">
+                                <div class="post-author">
+                                    ${post.authorName}
+                                    <span class="post-handle">@${post.authorName.toLowerCase().replace(/\s/g, '')}</span>
+                                    ${feelingBadge}
+                                </div>
+                                <div class="post-time">${timeAgo}</div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            ${post.text ? `<p class="post-text">${post.text}</p>` : ''}
+                            ${post.image ? `<div class="post-image"><img src="${post.image}" alt=""></div>` : ''}
+                        </div>
+                        <div class="post-actions">
+                            <button class="action-btn ${likedByUser ? 'liked' : ''}" onclick="toggleLike('${post.id}')">
+                                <i class="fas fa-heart"></i>
+                                <span>${post.likes || 0}</span>
+                            </button>
+                            <button class="action-btn" onclick="toggleComments('${post.id}')">
+                                <i class="fas fa-comment"></i>
+                                <span>${comments.length}</span>
+                            </button>
+                        </div>
+                        <div id="comments-${post.id}" class="comments-section hidden">
+                            ${comments.map(c => `
+                                <div class="comment-item">
+                                    <img src="${c.authorAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.authorName)}&background=171717&color=ededed`}" class="comment-avatar" alt="">
+                                    <div class="comment-body">
+                                        <span class="comment-author">${c.authorName}</span>
+                                        <span class="comment-text">${c.text}</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                            <div class="comment-input-row">
+                                <input type="text" class="comment-input" id="comment-input-${post.id}" placeholder="Write a comment...">
+                                <button class="btn-primary" onclick="addComment('${post.id}')">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        function toggleComments(postId) {
+            document.getElementById('comments-' + postId).classList.toggle('hidden');
+        }
+
+        function addComment(postId) {
+            const input = document.getElementById('comment-input-' + postId);
+            const text = input.value.trim();
+            if (!text) return;
+
+            const user = getUser();
+            const posts = getPosts();
+            const postIndex = posts.findIndex(p => p.id === postId);
+            if (postIndex === -1) return;
+
+            if (!posts[postIndex].comments) posts[postIndex].comments = [];
+
+            posts[postIndex].comments.push({
+                id: Date.now().toString(),
+                text,
+                authorId: user.id,
+                authorName: user.name,
+                authorAvatar: user.avatar,
+                createdAt: new Date().toISOString()
+            });
+
+            savePosts(posts);
+            loadFeed();
+
+            setTimeout(() => {
+                document.getElementById('comments-' + postId).classList.remove('hidden');
+            }, 50);
+        }
+
+        function getTimeAgo(dateString) {
+            const now = new Date();
+            const date = new Date(dateString);
+            const seconds = Math.floor((now - date) / 1000);
+
+            if (seconds < 60) return 'now';
+            if (seconds < 3600) return Math.floor(seconds / 60) + 'm';
+            if (seconds < 86400) return Math.floor(seconds / 3600) + 'h';
+            if (seconds < 604800) return Math.floor(seconds / 86400) + 'd';
+            return date.toLocaleDateString();
+        }
+    </script>
+</body>
+
+</html>
