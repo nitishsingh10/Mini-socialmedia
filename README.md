@@ -110,7 +110,6 @@ https://mini-socialmedia.vercel.app/index.html
 
 ---
 
-
 ## 📄 License
 
 This project is created for educational purposes as part of a college assignment.
