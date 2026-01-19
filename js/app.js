@@ -1,5 +1,3 @@
-/* SocialVibe - Simple JavaScript */
-
 const KEYS = {
     POSTS: 'socialvibe-posts',
     USER: 'socialvibe-user',
