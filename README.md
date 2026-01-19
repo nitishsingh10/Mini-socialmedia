@@ -110,15 +110,6 @@ https://mini-socialmedia.vercel.app/index.html
 
 ---
 
-## 🔮 Future Scope
-
-- Like and comment functionality
-- User-based post identification
-- Backend integration
-- Image uploads
-- Authentication system
-
----
 
 ## 📄 License
 
