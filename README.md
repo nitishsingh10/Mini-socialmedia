@@ -75,7 +75,6 @@ Each member contributed through individual commits.
   - Core JavaScript logic
   - DOM rendering
   - LocalStorage integration
-  - Overall project coordination
 
 - **Team Member 2**
   - HTML structure
