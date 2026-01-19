@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discover - SocialVibe</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="index.html" class="sidebar-logo">
+                <i class="fas fa-bolt"></i>
+                <span>SocialVibe</span>
+            </a>
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
+                <a href="discover.html" class="nav-item active"><i class="fas fa-compass"></i><span>Discover</span></a>
+                <a href="profile.html" class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
+                <a href="settings.html" class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info" onclick="window.location.href='profile.html'">
+                    <img id="sidebarAvatar" class="user-avatar" src="" alt="">
+                    <div class="user-details">
+                        <div class="user-name" id="sidebarName">Loading...</div>
+                        <div class="user-handle" id="sidebarHandle">@loading</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Area -->
+        <main class="main-area">
+            <div class="feed-container">
+                <!-- Search -->
+                <div class="post-composer" style="padding: 16px 0;">
+                    <input type="text" class="form-input" id="searchInput" placeholder="Search posts, people, topics..."
+                        style="background: var(--bg-subtle);">
+                </div>
+
+                <!-- Trending -->
+                <div class="widget" style="margin-bottom: 24px;">
+                    <div class="widget-title">
+                        <i class="fas fa-fire"></i>
+                        Trending Now
+                    </div>
+                    <div class="trending-item">
+                        <span class="trending-rank">1</span>
+                        <div class="trending-info">
+                            <div class="trending-topic">#TechVibes</div>
+                            <div class="trending-count">Technology · 2.4k posts</div>
+                        </div>
+                    </div>
+                    <div class="trending-item">
+                        <span class="trending-rank">2</span>
+                        <div class="trending-info">
+                            <div class="trending-topic">#BuildInPublic</div>
+                            <div class="trending-count">Startups · 1.8k posts</div>
+                        </div>
+                    </div>
+                    <div class="trending-item">
+                        <span class="trending-rank">3</span>
+                        <div class="trending-info">
+                            <div class="trending-topic">#Hackathon</div>
+                            <div class="trending-count">Development · 1.2k posts</div>
+                        </div>
+                    </div>
+                    <div class="trending-item">
+                        <span class="trending-rank">4</span>
+                        <div class="trending-info">
+                            <div class="trending-topic">#ProductLaunch</div>
+                            <div class="trending-count">Business · 987 posts</div>
+                        </div>
+                    </div>
+                    <div class="trending-item">
+                        <span class="trending-rank">5</span>
+                        <div class="trending-info">
+                            <div class="trending-topic">#AINews</div>
+                            <div class="trending-count">AI · 756 posts</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Featured Posts -->
+                <div class="widget">
+                    <div class="widget-title">
+                        <i class="fas fa-star"></i>
+                        Featured Posts
+                    </div>
+                    <div id="featuredPosts"></div>
+                    <div id="emptyFeatured" class="empty-state hidden" style="padding: 24px;">
+                        <p class="text-muted">No posts yet</p>
+                    </div>
+                </div>
+
+                <!-- Suggested Users -->
+                <div class="widget">
+                    <div class="widget-title">
+                        <i class="fas fa-user-plus"></i>
+                        Suggested
+                    </div>
+                    <div id="suggestedUsers"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile Nav -->
+    <nav class="mobile-nav">
+        <a href="index.html" class="nav-item"><i class="fas fa-home"></i></a>
+        <a href="discover.html" class="nav-item active"><i class="fas fa-compass"></i></a>
+        <a href="profile.html" class="nav-item"><i class="fas fa-user"></i></a>
+        <a href="settings.html" class="nav-item"><i class="fas fa-cog"></i></a>
+    </nav>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSidebarInfo();
+            loadFeaturedPosts();
+            loadSuggestedUsers();
+        });
+
+        function loadSidebarInfo() {
+            const user = getUser();
+            const avatar = user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=171717&color=ededed`;
+            document.getElementById('sidebarAvatar').src = avatar;
+            document.getElementById('sidebarName').textContent = user.name;
+            document.getElementById('sidebarHandle').textContent = '@' + user.username;
+        }
+
+        function loadFeaturedPosts() {
+            const posts = getPosts();
+            const container = document.getElementById('featuredPosts');
+            const empty = document.getElementById('emptyFeatured');
+
+            if (posts.length === 0) {
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            const featured = posts.sort((a, b) => (b.likes || 0) - (a.likes || 0)).slice(0, 3);
+
+            container.innerHTML = featured.map(post => {
+                const avatar = post.authorAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(post.authorName)}&background=171717&color=ededed`;
+                return `
+                    <div style="padding: 12px 0; border-bottom: 1px solid var(--border-dim);">
+                        <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px;">
+                            <img src="${avatar}" style="width: 28px; height: 28px; border-radius: 50%;">
+                            <span style="font-weight: 500; font-size: 13px;">${post.authorName}</span>
+                        </div>
+                        <p style="font-size: 13px; color: var(--text-muted);">${post.text ? post.text.substring(0, 100) : ''}${post.text && post.text.length > 100 ? '...' : ''}</p>
+                        <div style="font-size: 12px; color: var(--text-faint); margin-top: 8px;">
+                            <i class="fas fa-heart"></i> ${post.likes || 0}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadSuggestedUsers() {
+            const users = [
+                { name: 'Alex Chen', handle: '@alexc', color: '667eea' },
+                { name: 'Sarah Kim', handle: '@sarahk', color: 'f093fb' },
+                { name: 'Mike Dev', handle: '@mikedev', color: '4facfe' }
+            ];
+
+            document.getElementById('suggestedUsers').innerHTML = users.map(u => `
+                <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border-dim);">
+                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(u.name)}&background=${u.color}&color=fff" style="width: 36px; height: 36px; border-radius: 50%;">
+                    <div style="flex: 1;">
+                        <div style="font-weight: 500; font-size: 13px;">${u.name}</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">${u.handle}</div>
+                    </div>
+                    <button class="btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="this.textContent = this.textContent === 'Follow' ? 'Following' : 'Follow'">Follow</button>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+
+</html>

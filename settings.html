@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - SocialVibe</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="index.html" class="sidebar-logo">
+                <i class="fas fa-bolt"></i>
+                <span>SocialVibe</span>
+            </a>
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
+                <a href="discover.html" class="nav-item"><i class="fas fa-compass"></i><span>Discover</span></a>
+                <a href="profile.html" class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
+                <a href="settings.html" class="nav-item active"><i class="fas fa-cog"></i><span>Settings</span></a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info" onclick="window.location.href='profile.html'">
+                    <img id="sidebarAvatar" class="user-avatar" src="" alt="">
+                    <div class="user-details">
+                        <div class="user-name" id="sidebarName">Loading...</div>
+                        <div class="user-handle" id="sidebarHandle">@loading</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Area -->
+        <main class="main-area">
+            <div class="feed-container">
+                <h1 style="font-size: 20px; font-weight: 600; margin-bottom: 24px; letter-spacing: -0.02em;">Settings
+                </h1>
+
+                <!-- Appearance -->
+                <div class="settings-section">
+                    <div class="settings-title">Appearance</div>
+                    <div class="setting-row">
+                        <div class="setting-info">
+                            <div class="setting-label">Dark Mode</div>
+                            <div class="setting-desc">Toggle between dark and light theme</div>
+                        </div>
+                        <div id="themeToggle" class="toggle" onclick="toggleTheme()"></div>
+                    </div>
+                </div>
+
+                <!-- Notifications -->
+                <div class="settings-section">
+                    <div class="settings-title">Notifications</div>
+                    <div class="setting-row">
+                        <div class="setting-info">
+                            <div class="setting-label">Likes</div>
+                            <div class="setting-desc">Get notified when someone likes your post</div>
+                        </div>
+                        <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                    <div class="setting-row">
+                        <div class="setting-info">
+                            <div class="setting-label">Comments</div>
+                            <div class="setting-desc">Get notified when someone comments</div>
+                        </div>
+                        <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                </div>
+
+                <!-- Data -->
+                <div class="settings-section">
+                    <div class="settings-title">Data</div>
+                    <div class="setting-row" style="cursor: pointer;" onclick="exportData()">
+                        <div class="setting-info">
+                            <div class="setting-label">Export Data</div>
+                            <div class="setting-desc">Download all your posts and profile</div>
+                        </div>
+                        <i class="fas fa-download setting-action"></i>
+                    </div>
+                    <div class="setting-row" style="cursor: pointer;" onclick="clearData()">
+                        <div class="setting-info">
+                            <div class="setting-label text-error">Clear All Data</div>
+                            <div class="setting-desc">Permanently delete everything</div>
+                        </div>
+                        <i class="fas fa-trash setting-action text-error"></i>
+                    </div>
+                </div>
+
+                <!-- Account -->
+                <div class="settings-section">
+                    <div class="settings-title">Account</div>
+                    <div class="setting-row" style="cursor: pointer;" onclick="logoutUser()">
+                        <div class="setting-info">
+                            <div class="setting-label text-error">Logout</div>
+                            <div class="setting-desc">Sign out of your account</div>
+                        </div>
+                        <i class="fas fa-sign-out-alt setting-action text-error"></i>
+                    </div>
+                </div>
+
+                <!-- About -->
+                <div class="widget" style="margin-top: 32px;">
+                    <div class="widget-title">
+                        <i class="fas fa-info-circle"></i>
+                        About
+                    </div>
+                    <div style="font-size: 13px; color: var(--text-muted);">
+                        <p>SocialVibe v2.0</p>
+                        <p style="margin-top: 4px;">Made with ❤️ by PixelWebs</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile Nav -->
+    <nav class="mobile-nav">
+        <a href="index.html" class="nav-item"><i class="fas fa-home"></i></a>
+        <a href="discover.html" class="nav-item"><i class="fas fa-compass"></i></a>
+        <a href="profile.html" class="nav-item"><i class="fas fa-user"></i></a>
+        <a href="settings.html" class="nav-item active"><i class="fas fa-cog"></i></a>
+    </nav>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSidebarInfo();
+        });
+
+        function loadSidebarInfo() {
+            const user = getUser();
+            const avatar = user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=171717&color=ededed`;
+            document.getElementById('sidebarAvatar').src = avatar;
+            document.getElementById('sidebarName').textContent = user.name;
+            document.getElementById('sidebarHandle').textContent = '@' + user.username;
+        }
+
+        function exportData() {
+            const data = {
+                user: getUser(),
+                posts: getPosts(),
+                exportedAt: new Date().toISOString()
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'socialvibe-data.json';
+            a.click();
+            showToast('Data exported');
+        }
+
+        function clearData() {
+            if (confirm('Delete all data? This cannot be undone.')) {
+                localStorage.clear();
+                showToast('Data cleared', 'error');
+                setTimeout(() => window.location.reload(), 1000);
+            }
+        }
+
+        function toggleTheme() {
+            const toggle = document.getElementById('themeToggle');
+            const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+
+            if (isDark) {
+                document.documentElement.setAttribute('data-theme', 'light');
+                toggle.classList.remove('active');
+                localStorage.setItem('socialvibe-theme', 'light');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                toggle.classList.add('active');
+                localStorage.setItem('socialvibe-theme', 'dark');
+            }
+        }
+
+        // Initialize theme toggle state
+        function initThemeToggle() {
+            const theme = localStorage.getItem('socialvibe-theme') || 'dark';
+            const toggle = document.getElementById('themeToggle');
+            if (theme === 'dark') {
+                toggle.classList.add('active');
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                toggle.classList.remove('active');
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        }
+
+        // Call on load
+        initThemeToggle();
+    </script>
+</body>
+
+</html>
