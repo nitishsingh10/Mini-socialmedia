@@ -71,20 +71,19 @@ Copy code
 This project was developed by a team of four members using GitHub for collaboration.  
 Each member contributed through individual commits.
 
-- **Team Member 1**
+- **Team Member 1 - Nitish**
   - Core JavaScript logic
   - DOM rendering
   - LocalStorage integration
+  - Overall Project Coordination
 
-- **Team Member 2**
+- **Team Member 2 & 3 - Suryanjali and Jayati**
   - HTML structure
   - CSS styling and UI improvements
-
-- **Team Member 3**
   - Feature enhancements
   - Interaction handling and testing
 
-- **Team Member 4**
+- **Team Member 4 - Sarthak**
   - Documentation
   - Project planning and testing support
 
