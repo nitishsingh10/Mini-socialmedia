@@ -1,4 +1,4 @@
-/* SocialVibe - Simple JavaScript */
+// for different users
 
 const KEYS = {
     POSTS: 'vibeup-posts',
