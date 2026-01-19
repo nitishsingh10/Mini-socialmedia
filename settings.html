@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings - SocialVibe</title>
+    <title>Settings - VibeUp</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -15,7 +15,7 @@
         <aside class="sidebar">
             <a href="index.html" class="sidebar-logo">
                 <i class="fas fa-bolt"></i>
-                <span>SocialVibe</span>
+                <span>VibeUp</span>
             </a>
             <nav class="sidebar-nav">
                 <a href="index.html" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
@@ -109,7 +109,7 @@
                         About
                     </div>
                     <div style="font-size: 13px; color: var(--text-muted);">
-                        <p>SocialVibe v2.0</p>
+                        <p>VibeUp v2.0</p>
                         <p style="margin-top: 4px;">Made with ❤️ by PixelWeb</p>
                     </div>
                 </div>
@@ -150,7 +150,7 @@
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = 'socialvibe-data.json';
+            a.download = 'vibeup-data.json';
             a.click();
             showToast('Data exported');
         }
@@ -170,17 +170,17 @@
             if (isDark) {
                 document.documentElement.setAttribute('data-theme', 'light');
                 toggle.classList.remove('active');
-                localStorage.setItem('socialvibe-theme', 'light');
+                localStorage.setItem('vibeup-theme', 'light');
             } else {
                 document.documentElement.removeAttribute('data-theme');
                 toggle.classList.add('active');
-                localStorage.setItem('socialvibe-theme', 'dark');
+                localStorage.setItem('vibeup-theme', 'dark');
             }
         }
 
         // Initialize theme toggle state
         function initThemeToggle() {
-            const theme = localStorage.getItem('socialvibe-theme') || 'dark';
+            const theme = localStorage.getItem('vibeup-theme') || 'dark';
             const toggle = document.getElementById('themeToggle');
             if (theme === 'dark') {
                 toggle.classList.add('active');

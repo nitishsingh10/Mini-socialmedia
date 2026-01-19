@@ -1,11 +1,11 @@
-/* SocialVibe - Simple JavaScript */
+/* VibeUp - Simple JavaScript */
 
 const KEYS = {
-    POSTS: 'socialvibe-posts',
-    USER: 'socialvibe-user',
-    THEME: 'socialvibe-theme',
-    REGISTERED_USERS: 'socialvibe-registered-users',
-    LOGGED_IN: 'socialvibe-logged-in'
+    POSTS: 'vibeup-posts',
+    USER: 'vibeup-user',
+    THEME: 'vibeup-theme',
+    REGISTERED_USERS: 'vibeup-registered-users',
+    LOGGED_IN: 'vibeup-logged-in'
 };
 
 // --- Theme ---
@@ -26,7 +26,7 @@ function getUser() {
             id: 'user_' + Date.now(),
             name: 'New User',
             username: 'newuser',
-            bio: 'Hello! I use SocialVibe.',
+            bio: 'Hello! I use VibeUp.',
             avatar: null,
             createdAt: new Date().toISOString()
         };
