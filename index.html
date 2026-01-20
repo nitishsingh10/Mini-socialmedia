@@ -238,7 +238,7 @@
                 {
                     id: 'dummy_1',
                     text: "Just finished my first marathon! 🏃‍♂️💨 The energy was incredible. Can't wait for the next one! #Running #FitnessGoals",
-                    image: null,
+                    image: 'images/marathon.png',
                     feeling: { emoji: '🎉', text: 'excited' },
                     authorId: 'user_alex',
                     authorName: 'Alex Rivera',
@@ -259,7 +259,7 @@
                 {
                     id: 'dummy_2',
                     text: "Exploring the beautiful streets of Kyoto. The cherry blossoms are breathtaking this time of year. 🌸🏯",
-                    image: 'https://images.unsplash.com/photo-1493976040375-85fd487dfb33?w=800&q=80',
+                    image: 'images/image.png',
                     feeling: { emoji: '😍', text: 'loved' },
                     authorId: 'user_sarah',
                     authorName: 'Sarah Chen',
@@ -272,7 +272,7 @@
                 {
                     id: 'dummy_3',
                     text: "Coding late into the night. Coffee is my best friend right now. ☕💻 Does anyone else love the peace of night coding? #DeveloperLife",
-                    image: null,
+                    image: 'images/coffee.png',
                     feeling: { emoji: '☕', text: 'relaxed' },
                     authorId: 'user_mike',
                     authorName: 'Mike Johnson',
@@ -284,11 +284,34 @@
                 }
             ];
 
-            const newPostsToAdd = dummyPosts.filter(dp => !posts.find(p => p.id === dp.id));
+            let postsChanged = false;
 
-            if (newPostsToAdd.length > 0) {
-                const updatedPosts = [...newPostsToAdd, ...posts];
-                savePosts(updatedPosts);
+            dummyPosts.forEach(dummy => {
+                const index = posts.findIndex(p => p.id === dummy.id);
+                if (index === -1) {
+                    // Add new dummy post
+                    posts.unshift(dummy);
+                    postsChanged = true;
+                } else {
+                    // Update existing dummy post content (image, text, etc)
+                    // This ensures changes to dummy posts are reflected even if they are already in LS
+                    if (posts[index].image !== dummy.image ||
+                        posts[index].text !== dummy.text ||
+                        JSON.stringify(posts[index].feeling) !== JSON.stringify(dummy.feeling)) {
+
+                        posts[index].image = dummy.image;
+                        posts[index].text = dummy.text;
+                        posts[index].feeling = dummy.feeling;
+                        postsChanged = true;
+                    }
+                }
+            });
+
+            if (postsChanged) {
+                savePosts(posts);
+                // Reload feed to show changes immediately if we are initializing
+                const container = document.getElementById('feedContainer');
+                if (container) container.innerHTML = ''; // Force reload trigger if needed, though loadFeed called after will handle it
             }
         }
 
