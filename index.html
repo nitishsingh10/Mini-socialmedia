@@ -215,6 +215,7 @@
         let selectedFeeling = null;
 
         document.addEventListener('DOMContentLoaded', () => {
+            seedDummyPosts();
             loadFeed();
             loadUserInfo();
             loadStats();
@@ -410,6 +411,64 @@
             setTimeout(() => {
                 document.getElementById('comments-' + postId).classList.remove('hidden');
             }, 50);
+        }
+
+        function seedDummyPosts() {
+            const posts = getPosts();
+            if (posts.length > 0) return;
+
+            const dummyPosts = [
+                {
+                    id: '1',
+                    text: 'Just finished a great workout! 💪 #fitness #motivation',
+                    image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800',
+                    feeling: { emoji: '💪', text: 'motivated' },
+                    authorId: 'user_1',
+                    authorName: 'Alex Johnson',
+                    authorAvatar: 'https://ui-avatars.com/api/?name=Alex+Johnson&background=0D8ABC&color=fff',
+                    likes: 12,
+                    likedBy: [],
+                    comments: [],
+                    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString()
+                },
+                {
+                    id: '2',
+                    text: 'Beautiful sunset today 🌅',
+                    image: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=800',
+                    feeling: { emoji: '😍', text: 'loved' },
+                    authorId: 'user_2',
+                    authorName: 'Sarah Smith',
+                    authorAvatar: 'https://ui-avatars.com/api/?name=Sarah+Smith&background=E91E63&color=fff',
+                    likes: 45,
+                    likedBy: [],
+                    comments: [
+                        {
+                            id: 'c1',
+                            text: 'Wow, stunning view!',
+                            authorId: 'user_3',
+                            authorName: 'Mike',
+                            authorAvatar: 'https://ui-avatars.com/api/?name=Mike&background=171717&color=ededed',
+                            createdAt: new Date().toISOString()
+                        }
+                    ],
+                    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString()
+                },
+                {
+                    id: '3',
+                    text: 'Working on a new project using VibeUp! 🚀',
+                    image: null,
+                    feeling: { emoji: '🎉', text: 'excited' },
+                    authorId: 'user_1',
+                    authorName: 'Alex Johnson',
+                    authorAvatar: 'https://ui-avatars.com/api/?name=Alex+Johnson&background=0D8ABC&color=fff',
+                    likes: 8,
+                    likedBy: [],
+                    comments: [],
+                    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString()
+                }
+            ];
+
+            savePosts(dummyPosts);
         }
 
         function getTimeAgo(dateString) {
