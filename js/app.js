@@ -146,5 +146,220 @@ function checkAuth() {
 }
 
 // Initialize on load
+// Initialize on load
 initTheme();
 checkAuth();
+
+/* ========== STORIES SYSTEM ========== */
+const dummyStories = [
+    {
+        userId: 'user_alex',
+        username: 'Alex',
+        avatar: 'https://ui-avatars.com/api/?name=Alex&background=000000&color=fff',
+        items: [
+            { type: 'image', url: 'https://images.unsplash.com/photo-1526726538690-5cbf956ae2fd?w=800&q=80', duration: 5000 },
+            { type: 'image', url: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80', duration: 5000 }
+        ]
+    },
+    {
+        userId: 'user_sarah',
+        username: 'Sarah',
+        avatar: 'https://ui-avatars.com/api/?name=Sarah&background=000000&color=fff',
+        items: [
+            { type: 'image', url: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80', duration: 5000 },
+            { type: 'video', url: 'https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-sign-1232-large.mp4', duration: 15000 }
+        ]
+    },
+    {
+        userId: 'user_mike',
+        username: 'Mike',
+        avatar: 'https://ui-avatars.com/api/?name=Mike&background=000000&color=fff',
+        items: [
+            { type: 'image', url: 'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?w=800&q=80', duration: 5000 }
+        ]
+    },
+    {
+        userId: 'user_emma',
+        username: 'Emma',
+        avatar: 'https://ui-avatars.com/api/?name=Emma&background=000000&color=fff',
+        items: [
+            { type: 'image', url: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=800&q=80', duration: 5000 }
+        ]
+    }
+];
+
+let currentStoryUserIndex = 0;
+let currentStoryItemIndex = 0;
+let storyTimer = null;
+let isStoryOpen = false;
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Existing init calls are inside the first DOMContentLoaded in app.js? 
+    // Wait, the file has a DOMContentLoaded listener at line 214 of index.html calling initializeDummyPosts etc. 
+    // app.js has its own init calls at the bottom.
+    // We should call initializeStories() here.
+    initializeStories();
+});
+
+function initializeStories() {
+    const container = document.getElementById('storiesRow');
+    if (!container) return; // storiesRow might not be in DOM if page differs
+
+    // Keep the "Add" button
+    const addButton = container.querySelector('.add-story');
+    container.innerHTML = '';
+    if (addButton) container.appendChild(addButton);
+
+    dummyStories.forEach((userStory, index) => {
+        const storyEl = document.createElement('div');
+        storyEl.className = 'story';
+        storyEl.onclick = () => openStory(index);
+
+        storyEl.innerHTML = `
+            <div class="story-ring ${userStory.seen ? '' : 'story-active'}">
+                <img src="${userStory.avatar}" alt="${userStory.username}">
+            </div>
+            <span class="story-name">${userStory.username}</span>
+        `;
+        container.appendChild(storyEl);
+    });
+}
+
+function openStory(userIndex) {
+    currentStoryUserIndex = userIndex;
+    currentStoryItemIndex = 0;
+    isStoryOpen = true;
+
+    const modal = document.getElementById('storyViewer');
+    modal.classList.remove('hidden');
+
+    showStory();
+}
+
+function closeStoryViewer() {
+    isStoryOpen = false;
+    clearTimeout(storyTimer);
+
+    // Stop video if playing
+    const video = document.querySelector('.story-media-container video');
+    if (video) video.pause();
+
+    document.getElementById('storyViewer').classList.add('hidden');
+}
+
+function showStory() {
+    if (!isStoryOpen) return;
+
+    const user = dummyStories[currentStoryUserIndex];
+    if (!user) {
+        closeStoryViewer();
+        return;
+    }
+
+    const item = user.items[currentStoryItemIndex];
+
+    // Update Header
+    document.getElementById('storyViewerAvatar').src = user.avatar;
+    document.getElementById('storyViewerName').textContent = user.username;
+    document.getElementById('storyViewerTime').textContent = '2h'; // Random time for now
+
+    // Render Progress Bars
+    const progressContainer = document.getElementById('storyProgressBars');
+    progressContainer.innerHTML = '';
+    user.items.forEach((_, idx) => {
+        const bar = document.createElement('div');
+        bar.className = 'story-progress-bar';
+        const fill = document.createElement('div');
+        fill.className = 'story-progress-fill';
+
+        if (idx < currentStoryItemIndex) {
+            fill.style.width = '100%';
+        } else if (idx === currentStoryItemIndex) {
+            // Animating current bar
+            fill.style.width = '0%';
+            // We'll set animation via JS for precision or transition
+        } else {
+            fill.style.width = '0%';
+        }
+
+        bar.appendChild(fill);
+        progressContainer.appendChild(bar);
+    });
+
+    // Render Media
+    const mediaContainer = document.querySelector('.story-media-container');
+    mediaContainer.innerHTML = ''; // Clear previous
+
+    if (item.type === 'image') {
+        const img = document.createElement('img');
+        img.src = item.url;
+        img.onload = () => startProgress(item.duration);
+        mediaContainer.appendChild(img);
+    } else if (item.type === 'video') {
+        const video = document.createElement('video');
+        video.src = item.url;
+        video.autoplay = true;
+        video.playsInline = true; // Important for mobile
+        video.onloadedmetadata = () => {
+            startProgress(video.duration * 1000);
+        };
+        video.onended = nextStory;
+        mediaContainer.appendChild(video);
+    }
+}
+
+function startProgress(duration) {
+    clearTimeout(storyTimer);
+
+    const bars = document.querySelectorAll('.story-progress-fill');
+    const currentBar = bars[currentStoryItemIndex];
+
+    // Reset transition
+    currentBar.style.transition = 'none';
+    currentBar.style.width = '0%';
+
+    // Force reflow
+    void currentBar.offsetWidth;
+
+    // Start animation
+    currentBar.style.transition = `width ${duration}ms linear`;
+    currentBar.style.width = '100%';
+
+    storyTimer = setTimeout(nextStory, duration);
+}
+
+function nextStory() {
+    const user = dummyStories[currentStoryUserIndex];
+
+    if (currentStoryItemIndex < user.items.length - 1) {
+        currentStoryItemIndex++;
+        showStory();
+    } else {
+        // Next user
+        if (currentStoryUserIndex < dummyStories.length - 1) {
+            currentStoryUserIndex++;
+            currentStoryItemIndex = 0;
+            showStory();
+        } else {
+            closeStoryViewer();
+        }
+    }
+}
+
+function prevStory() {
+    if (currentStoryItemIndex > 0) {
+        currentStoryItemIndex--;
+        showStory();
+    } else {
+        // Previous user
+        if (currentStoryUserIndex > 0) {
+            currentStoryUserIndex--;
+            currentStoryItemIndex = 0; // Or last item of prev user? simpler to start from 0
+            showStory();
+        } else {
+            // First story of first user, restart or do nothing
+            currentStoryItemIndex = 0;
+            showStory();
+        }
+    }
+}

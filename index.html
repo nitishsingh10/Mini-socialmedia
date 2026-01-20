@@ -50,43 +50,14 @@
         <main class="main-area">
             <div class="feed-container">
                 <!-- Stories Section -->
-                <div class="stories-section">
+                <div class="stories-section" id="storiesRow">
                     <div class="story add-story">
                         <div class="story-ring">
                             <i class="fas fa-plus"></i>
                         </div>
                         <span class="story-name">Add</span>
                     </div>
-                    <div class="story">
-                        <div class="story-ring">
-                            <img src="https://ui-avatars.com/api/?name=Alex&background=000000&color=fff" alt="">
-                        </div>
-                        <span class="story-name">Alex</span>
-                    </div>
-                    <div class="story">
-                        <div class="story-ring">
-                            <img src="https://ui-avatars.com/api/?name=Sarah&background=000000&color=fff" alt="">
-                        </div>
-                        <span class="story-name">Sarah</span>
-                    </div>
-                    <div class="story">
-                        <div class="story-ring">
-                            <img src="https://ui-avatars.com/api/?name=Mike&background=000000&color=fff" alt="">
-                        </div>
-                        <span class="story-name">Mike</span>
-                    </div>
-                    <div class="story">
-                        <div class="story-ring">
-                            <img src="https://ui-avatars.com/api/?name=Emma&background=000000&color=fff" alt="">
-                        </div>
-                        <span class="story-name">Emma</span>
-                    </div>
-                    <div class="story">
-                        <div class="story-ring">
-                            <img src="https://ui-avatars.com/api/?name=John&background=000000&color=fff" alt="">
-                        </div>
-                        <span class="story-name">John</span>
-                    </div>
+                    <!-- Dynamic stories will be inserted here -->
                 </div>
 
                 <div class="post-composer">
@@ -202,6 +173,43 @@
         <a href="profile.html" class="nav-item"><i class="fas fa-user"></i></a>
         <a href="settings.html" class="nav-item"><i class="fas fa-cog"></i></a>
     </nav>
+
+    <!-- Story Viewer Modal -->
+    <div id="storyViewer" class="story-viewer hidden">
+        <div class="story-backdrop" onclick="closeStoryViewer()"></div>
+        <div class="story-content-wrapper">
+            <!-- Progress Bar -->
+            <div class="story-progress-container" id="storyProgressBars">
+                <!-- Bars will be injected here -->
+            </div>
+
+            <!-- Header -->
+            <div class="story-header">
+                <div class="story-user-info">
+                    <img id="storyViewerAvatar" src="" alt="">
+                    <span id="storyViewerName">Author Name</span>
+                    <span id="storyViewerTime">2h</span>
+                </div>
+                <div class="story-actions">
+                    <button class="story-close-btn" onclick="closeStoryViewer()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Media -->
+            <div class="story-media-container">
+                <!-- Image or Video will be injected here -->
+                <div id="storyMediaPlaceHolder" class="story-media-placeholder">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <!-- Navigation Overlays -->
+            <div class="story-nav-prev" onclick="prevStory()"></div>
+            <div class="story-nav-next" onclick="nextStory()"></div>
+        </div>
+    </div>
 
     <!-- Toast Container -->
     <div id="toastContainer" class="toast-container"></div>
