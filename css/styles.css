@@ -1,9 +1,7 @@
-/* VibeUp - Hackathon Aesthetic */
-/* Vercel/Linear inspired dark theme */
+/* for icons */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* ========== CSS VARIABLES ========== */
 :root {
     /* Backgrounds - Dark (Default) */
     --bg-root: #000000;

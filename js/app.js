@@ -1,4 +1,4 @@
-/* VibeUp - Simple JavaScript */
+// for different users check
 
 const KEYS = {
     POSTS: 'vibeup-posts',
