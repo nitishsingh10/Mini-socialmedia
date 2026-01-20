@@ -94,7 +94,7 @@ Each member contributed through individual commits.
 The project is deployed as a static web application using **Vercel**.
 
 🔗 **Live Demo:**  
-https://vibeyp1.vercel.app/index.html
+https://vibeup1.vercel.app/index.html
 
 ---
 
