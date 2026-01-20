@@ -94,7 +94,7 @@ Each member contributed through individual commits.
 The project is deployed as a static web application using **Vercel**.
 
 🔗 **Live Demo:**  
-https://mini-socialmedia.vercel.app/index.html
+https://vibeyp1.vercel.app/index.html
 
 ---
 
